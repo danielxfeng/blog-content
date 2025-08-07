@@ -13,7 +13,7 @@ On top of that, I wanted somewhere to share what I’ve learned along the way. S
 
 ---
 
-## **Features**
+## ✨ **Features**
 
 ### Frontend
 
@@ -61,7 +61,7 @@ On top of that, I wanted somewhere to share what I’ve learned along the way. S
 - **One‑Command VPS Provisioning**
   Built a custom script to configure the VPS from scratch: install dependencies, set up services, and even switch providers or scale up with a single command.
 
-## Tech Stack
+## 🔧 Tech Stack
 
 **Frontend**
 - React 19 with React Router 7
@@ -89,7 +89,7 @@ On top of that, I wanted somewhere to share what I’ve learned along the way. S
 
 ---
 
-## Some thoughts
+## 🧠 Some Thoughts
 
 I started this project in late April 2025 and, working on and off, finished it in early August, roughly 370 hours in total:
 
@@ -114,7 +114,6 @@ Building a real world website turned out to be much harder than I imagined. Comp
 
 
 - **Plenty of over‑engineering — on purpose**
-  I intentionally explored concepts I’d only learned in theory, like stateless design, pluggable search engines, silent token refresh — even if they weren’t strictly necessary.
+  I intentionally explored concepts I’d only learned in theory, like stateless design, pluggable search engines, silent token refresh, even if they weren’t strictly necessary.
   It slowed things down but taught me a lot, and it’s satisfying to see those ideas work in practice.
 
----

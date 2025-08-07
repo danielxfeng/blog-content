@@ -10,7 +10,7 @@ At Hive Helsinki, students need to request meeting room bookings through staff m
 
 ---
 
-## Features
+## 🧪 Features
 
 - 📅 **Weekly Calendar View** - Scrollable timeline showing all room bookings
 - ✨ **One-Click Booking** - Add new reservations with intuitive time slot selection
@@ -25,7 +25,7 @@ At Hive Helsinki, students need to request meeting room bookings through staff m
 
 ---
 
-## Tech Stack
+## 🔧 Tech Stack
 
 - **Frontend:** React + TypeScript + Vite
 - **UI Components:** ShadCN/UI + Tailwind CSS
@@ -37,7 +37,7 @@ At Hive Helsinki, students need to request meeting room bookings through staff m
 
 ---
 
-## My Thoughts
+## 🧠 My Thoughts
 
 - **Complexity vs. Delivery**
   In both this booking system and my [Daniel's Lab](https://danielslab.dev/blog/posts/a-full-stack-website-daniels-lab) project, I realized that backend complexity often depends on concrete project requirements. But on the frontend, there’s almost no ceiling when it comes to polish and user experience. In [Daniel's Lab](https://danielslab.dev/blog/posts/a-full-stack-website-daniels-lab) project, for instance, I spent a lot of time on fine-tuning animations.
