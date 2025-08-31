@@ -1,61 +1,54 @@
-Mushroom picking is a popular activity in Finland. However, for many foreigners (like me), identifying the right mushrooms in the forest can be confusing.
+# MushFinder - Experimental AI for Identifying 20 Common Finnish Forest Mushrooms
 
-**MushFinder** is an **experimental tool** I built to help users **get a rough suggestion** of what kind of mushroom they're seeing (*not to determine if it's edible*), based on a photo taken with their phone. It's powered by a custom CNN model and focuses specifically on mushrooms commonly found in Finnish forests.
+**Don’t expect too much from the results!**
+- Mushrooms are confusing by nature, and sometimes it’s difficult to identify them from just a picture.  
+- It’s also tricky for users to take a clear photo in the wild. Mushrooms are usually small and hidden in the grass, and once you pick them up for a photo, they may already look different from the images in my training set 😄
 
-This is my first full machine learning project, and it's currently in the testing phase.
+But I still wanted to put it out there as my very first machine learning project.
+And honestly, with a decent photo it can perform quite well. 
+The deployment itself was also intesting I guess, so I thought it would be fun to share.
 
----
+Mushroom picking is a popular activity in Finland. However, for many foreigners like me, identifying the right mushrooms in the forest can be confusing.
 
-> ⚠️ **Important Note**: The identification results are for **reference only**. This tool may **NOT** be accurate enough for food safety decisions.
->
-> ☠️☠️☠️ Consuming wild mushrooms based on this tool’s predictions can be **extremely dangerous and potentially fatal**. You are **fully responsible** for any decisions you make.
->
-> **NEVER** consume a mushroom unless it has been confirmed as safe by a **qualified expert**, or unless you are **100% certain** of its identity.
->
-> 📢 **Disclaimer**: This tool is the result of an experimental machine learning project. The training process may contain **flaws** or **limitations** that affect model performance.
->
-> While the model achieved a certain level of validation accuracy under experimental conditions, this figure was obtained on a controlled dataset and **does not reflect real world performance**.
->
-> In actual use, factors like lighting conditions, camera angle, image quality, and unfamiliar mushroom species can significantly reduce prediction accuracy. The results should therefore be treated with caution and **must not be relied upon for food safety decisions**.
->
-> This software is provided **“as is”, without warranty of any kind**, express or implied. The developer assumes **no responsibility** for any consequences arising from the use of this tool.
+MushFinder is an experimental tool I built to help users get a rough suggestion of what kind of mushroom they're seeing (not to determine if it's edible), based on a photo taken with their phone. It's powered by a custom CNN model and focuses specifically on mushrooms commonly found in Finnish forests.
+
+![MushFinder](https://github.com/danielxfeng/blog-content/blob/main/media/Mushroom-Finder-An-Efficient-CNN-To-Identify-Local-Mushrooms-In-Finland/Mushroom-Finder-An-Efficient-CNN-To-Identify-Local-Mushrooms-In-Finland.cover.jpg?raw=true))
+
+Try it for fun: [https://mush.danielslab.dev](https://mush.danielslab.dev)
 
 ---
 
-## ✨ Features
+## ✨ Challenges, Solutions, and Remaining Issues
 
-- **Local Focus**
-  Unlike Google Lens or other general-purpose tools, MushFinder is trained to recognize just the **20 most common mushroom species** in Finland. This makes it more efficient for the local environment.
+### 🧠 Machine Learning
+- **Class selection**  
+At the beginning, I ambitiously tried to train the model on nearly **200 mushroom species**. Unsurprisingly, the accuracy was poor and the model struggled to generalize. I then narrowed it down to **20 of the most common mushrooms in Finnish forests**, which drastically improved both training stability and accuracy.  
+- **Model architecture**  
+I experimented with different architectures and finally settled on the **Facebook ConvNeXt series**, applied through **transfer learning in PyTorch**. This gave me a good balance between accuracy and model size.  
+- **Hyperparameter tuning**  
+Initially I tuned everything manually, which was slow and tedious. Later I switched to **Optuna** for automated hyperparameter search, which helped speed up experiments and gave more consistent results.  
+- **Loss function design**  
+At one point I introduced a “toxic / edible” label as an auxiliary target. Interestingly, I found that using it only in the forward pass (without backpropagating the loss) worked better in practice.  
+- **Real-world lesson**  
+I learned that accuracy alone is not enough. In deployment, a top-1 prediction with very low confidence is practically useless. Many real photos failed to meet a “trustworthy” threshold, which was an important takeaway for me.
 
-- **Online / Offline Versions**
-  - **Online version**: Achieves ~85% accuracy on validation data.
-    *(Note: this number was obtained on a controlled dataset and does not reflect real world performance.)* Best suited for use with internet access. 
-  - **Edge version**: Much smaller, designed to run **entirely offline**, suitable for remote forests where mobile signal is weak.
+### 🗂️ Project Management
+- This was my first time setting up a **monorepo with Turborepo**, and I really enjoyed it.  
+- The monorepo includes:
+  - a **frontend** (React + Progressive Web App(PWA)),  
+  - an **API gateway** (TypeScript, running on Cloudflare Workers as Serverless functions), and  
+  - a **Python inference workers** (running on Hugging Face Spaces).  
+- Shared code was also interesting: I used **Zod** to define schemas, generated JSON Schema, and reused it across frontend (validation), API gateway, and Python backend (via Pydantic). This kept everything consistent and reduced bugs.
 
-- **Easy to Use**
-  - Works directly in the browser, no installation needed.
-  - Optimized for mobile devices with camera support.
-  - Runs on all major platforms (Android / iOS / Desktop).
+### 💻 Frontend
+- I built MushFinder as a **Progressive Web App (PWA)** so that it can be installed like a native app and run offline.  
+- On the client side, I integrated **ONNX-Runtime Web** to run inference directly in the browser. This means users can still get predictions even without internet access.  
+- For offline persistence, I used **IndexedDB** to store both images and inference results, so users can revisit past identifications even when they’re offline.  
+- The UI is optimized for **mobile-first usage**, since most people will be taking photos directly with their phones in the forest. Small touches like history tracking, disclaimer pop-ups, and a lightweight design help keep it simple and approachable.
 
-- **Privacy Friendly**
-  - No personal data or image content is collected or stored.
-  - All uploaded images are **automatically deleted daily** from the server.
-  - In the offline version, images are never uploaded, all processing runs locally on the device.
-
----
-
-## 🧪 Tech Highlights
-
-  - Built with **transfer learning**; tested ~10 CNN architectures and selected **ConvNeXt**.
-    - Online version uses **ConvNeXt-Tiny**.
-    - Offline version uses **ConvNeXt-Pico**, optimized for edge use.
-  - Used **Optuna** for automated hyperparameter tuning.
-  - Designed a **custom loss function** to penalize toxic mushroom misclassification more heavily.(However, this approach still **does not guarantee safety or reliability** in real world use.)
-
----
-
-## 🚧 Status
-
-The project is deploying, more details will be published soon.
-
-Stay tuned!
+### ⚙️ Backend
+- The backend is structured as a **distributed inference system**:  
+  - **API Gateway**: A lightweight service deployed on **Cloudflare Workers**, handling routing, validation, and coordination. Being serverless, it scales easily and requires minimal maintenance.  
+  - **Task Queue / Cache**: I used **Upstash Redis** for distributed task management and caching. This makes it easier to handle concurrent requests and ensures results can be returned quickly.  
+  - **Inference Worker**: The heavy lifting happens on **Hugging Face Spaces**, where the PyTorch model runs in a CPU container. This way I didn’t need to manage servers myself, and I could iterate faster.  
+- Together, this architecture allowed me to combine **serverless scalability** with **flexibility for experimentation**. It’s not perfect (latency can still be high when the Hugging Face container spins up), but it was good enough to deploy a working prototype end-to-end.
