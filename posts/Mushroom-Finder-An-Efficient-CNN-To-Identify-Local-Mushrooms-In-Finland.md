@@ -12,7 +12,7 @@ Mushroom picking is a popular activity in Finland. However, for many foreigners 
 
 MushFinder is an experimental tool I built to help users get a rough suggestion of what kind of mushroom they're seeing (not to determine if it's edible), based on a photo taken with their phone. It's powered by a custom CNN model and focuses specifically on mushrooms commonly found in Finnish forests.
 
-![MushFinder](https://github.com/danielxfeng/blog-content/blob/main/media/Mushroom-Finder-An-Efficient-CNN-To-Identify-Local-Mushrooms-In-Finland/Mushroom-Finder-An-Efficient-CNN-To-Identify-Local-Mushrooms-In-Finland.cover.jpg?raw=true))
+![MushFinder](https://github.com/danielxfeng/blog-content/blob/main/media/Mushfinder/mushfinder.cover.jpg?raw=true))
 
 Try it for fun: [https://mush.danielslab.dev](https://mush.danielslab.dev)
 
